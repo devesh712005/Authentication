@@ -21,3 +21,5 @@ const schema = new mongoose.Schema(
   },
   { timestamps: true }
 ); //created at updated at value using timestamp
+
+export const User = mongoose.model("User", schema);
