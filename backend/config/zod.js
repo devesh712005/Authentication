@@ -1,5 +1,5 @@
 import { z } from "zod";
-
+//validation email pasword
 export const registerSchema = z.object({
   name: z.string().min(3, "Name must be atleast 3 characters long"),
   email: z.string().email("Invalid Email format"),
