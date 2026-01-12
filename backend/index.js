@@ -2,9 +2,13 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDb from "./config/db.js";
 import { createClient } from "redis";
+import cookieParser from "cookie-parser";
 const app = express();
 
 dotenv.config();
+
+// middleware
+app.use(cookieParser());
 app.use(express.json());
 
 //Redis setup
