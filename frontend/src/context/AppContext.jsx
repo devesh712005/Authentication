@@ -38,10 +38,9 @@ export const AppProvider = ({ children }) => {
     }
   }
   useEffect(() => {
-    if (isAuth) {
-      fetchUser();
-    }
+    fetchUser();
   }, []);
+
   return (
     <AppContext.Provider
       value={{ setIsAuth, isAuth, user, setUser, loading, logoutUser }}

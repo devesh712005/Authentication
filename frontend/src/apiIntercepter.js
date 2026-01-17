@@ -1,7 +1,6 @@
 //This code automatically refreshes expired access tokens and retries API requests so users stay logged in without interruption.
 import axios from "axios";
-
-const server = "http://localhost:3000";
+const server = import.meta.env.VITE_SERVER;
 
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
