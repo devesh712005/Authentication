@@ -8,6 +8,7 @@ import { AppData } from "./context/AppContext";
 import Loading from "./Loading";
 import Register from "./pages/Register";
 import Verify from "./pages/Verify";
+import Dashboard from "./pages/Dashboard";
 function App() {
   const { isAuth, loading } = AppData();
   return (
@@ -31,7 +32,12 @@ function App() {
               path="/token/:token"
               element={isAuth ? <Home /> : <Verify />}
             />
+            <Route
+              path="/dashboard"
+              element={isAuth ? <Dashboard /> : <Login />}
+            />
           </Routes>
+
           <ToastContainer />
         </BrowserRouter>
       )}

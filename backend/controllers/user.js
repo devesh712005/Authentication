@@ -14,7 +14,10 @@ import {
   verifyRefreshToken,
 } from "../config/generateToken.js";
 import { json } from "zod";
-import { generateCSRFToken } from "../config/csrfMiddleware.js";
+import {
+  generateCSRFToken,
+  revokeCSRFToken,
+} from "../config/csrfMiddleware.js";
 
 export const registerUser = TryCatch(async (req, res) => {
   const sanitizedBody = sanitize(req.body);
@@ -241,13 +244,29 @@ export const verifyOtp = TryCatch(async (req, res) => {
   return res.status(200).json({
     message: `welcome ${user.name}`,
     user,
+    sessionInfo: {
+      sessionId: tokenData.sessionId,
+      loginTime: new Date().toISOString(),
+      csrfToken: tokenData.csrfToken,
+    },
   });
 });
 
 export const myProfile = TryCatch(async (req, res) => {
   const user = req.user;
 
-  res.json(user);
+  const sessionId = req.sessionId;
+  const sessionData = await redisClient.get(`session:${sessionId}`);
+  let sessionInfo = null;
+  if (sessionData) {
+    const parsedSession = JSON.parse(sessionData);
+    sessionInfo = {
+      sessionId,
+      loginTime: parsedSession.createdAt,
+      lastActivity: parsedSession.lastActivity,
+    };
+  }
+  res.json({ user, sessionInfo });
 });
 
 export const refreshToken = TryCatch(async (req, res) => {
@@ -261,19 +280,24 @@ export const refreshToken = TryCatch(async (req, res) => {
   const decode = await verifyRefreshToken(refreshToken);
 
   if (!decode) {
+    res.clearCookie("refreshToken");
+    res.clearCookie("accessToken");
+
+    res.clearCookie("csrfToken");
     return res.status(401).json({
-      message: "Invalid refresh token",
+      message: "Session expired.Please login",
     });
   }
 
-  generateAccessToken(decode.id, res);
+  generateAccessToken(decode.id, decode.sessionId, res);
   res.status(200).json({ message: "Token refreshed" });
 });
 
 export const logoutUser = TryCatch(async (req, res) => {
-  const userId = req.user_Id;
+  const userId = req.user._id;
 
   await revokeRefreshToken(userId);
+  await revokeCSRFToken(userId);
   res.clearCookie("refreshToken");
   res.clearCookie("accessToken");
 
@@ -290,5 +314,11 @@ export const refreshCSRF = TryCatch(async (req, res) => {
   res.json({
     message: "CSRF token refresh successfully",
     csrfToken: newCSRFToken,
+  });
+});
+
+export const adminController = TryCatch(async (req, res) => {
+  res.json({
+    message: "Hello admin",
   });
 });

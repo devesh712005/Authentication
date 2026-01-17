@@ -8,17 +8,19 @@ import { toast } from "react-toastify";
 const AppContext = createContext(null);
 export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null); //Logged-in user data
-  const [loading, setLoading] = useState(true); //Checking login status
+  const [loading, setLoading] = useState(false); //Checking login status
   const [isAuth, setIsAuth] = useState(false); //User logged in or not
 
   async function fetchUser() {
     setLoading(true);
     try {
       const { data } = await api.get(`/api/v1/me`);
-      setUser(data);
+      setUser(data.user);
       setIsAuth(true);
     } catch (error) {
       console.log(error);
+      setUser(null);
+      setIsAuth(false);
     } finally {
       setLoading(false);
     }
@@ -36,7 +38,9 @@ export const AppProvider = ({ children }) => {
     }
   }
   useEffect(() => {
-    fetchUser();
+    if (isAuth) {
+      fetchUser();
+    }
   }, []);
   return (
     <AppContext.Provider

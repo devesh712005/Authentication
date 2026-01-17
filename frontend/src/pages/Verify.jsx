@@ -17,7 +17,11 @@ const Verify = () => {
       );
       setSuccessMessage(data.message);
     } catch (error) {
-      setErrorMessage(error.response.data.message);
+      console.error("Verify error:", error);
+
+      setErrorMessage(
+        error.response?.data?.message || error.message || "Verification failed",
+      );
     } finally {
       setLoading(false);
     }

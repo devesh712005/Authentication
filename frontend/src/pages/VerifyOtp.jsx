@@ -6,6 +6,7 @@ import { server } from "../main";
 import { toast } from "react-toastify";
 import { AppData } from "../context/AppContext";
 function VerifyOtp() {
+  const navigate = useNavigate();
   const { setIsAuth, setUser } = AppData();
   const [otp, setOtp] = useState("");
   const [btnLoading, setBtnLoading] = useState(false);
@@ -22,12 +23,13 @@ function VerifyOtp() {
         },
         {
           withCredentials: true, //to read cookies
-        }
+        },
       );
       toast.success(data.message);
       setIsAuth(true);
       setUser(data.user);
       localStorage.clear("email");
+      navigate("/");
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
