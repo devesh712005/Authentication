@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import Verify from "./pages/Verify";
 import Dashboard from "./pages/Dashboard";
 function App() {
+  console.log("SERVER =", import.meta.env.VITE_SERVER);
   const { isAuth, loading } = AppData();
   return (
     <>

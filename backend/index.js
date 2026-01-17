@@ -13,10 +13,13 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, //localhost:5173
+    origin: [
+      "http://localhost:5173",
+      "https://authentication-sepia-one.vercel.app",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  })
+  }),
 );
 
 //Redis setup
