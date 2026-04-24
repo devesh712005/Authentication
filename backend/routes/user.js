@@ -21,7 +21,7 @@ router.post("/login", loginUser);
 router.post("/verify", verifyOtp);
 router.get("/me", isAuth, myProfile);
 router.post("/refresh", refreshToken);
-router.post("/logout", isAuth, verifyCSRFToken, logoutUser);
+router.post("/logout", logoutUser);
 router.post("/refresh-csrf", isAuth, refreshCSRF);
 router.get("/admin", isAuth, authorizedAdmin, adminController);
 export default router;

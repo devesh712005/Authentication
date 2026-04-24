@@ -302,16 +302,24 @@ export const refreshToken = TryCatch(async (req, res) => {
 });
 
 export const logoutUser = TryCatch(async (req, res) => {
-  const userId = req.user._id;
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  });
 
-  await revokeRefreshToken(userId);
-  await revokeCSRFToken(userId);
-  res.clearCookie("refreshToken");
-  res.clearCookie("accessToken");
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  });
 
-  res.clearCookie("csrfToken");
-  await redisClient.del(`user:${userId}`);
-  res.json({
+  res.clearCookie("csrfToken", {
+    secure: true,
+    sameSite: "None",
+  });
+
+  return res.status(200).json({
     message: "Logged out successfully",
   });
 });
