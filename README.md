@@ -12,7 +12,7 @@ It implements JWT-based authentication, OTP verification, Redis session manageme
 ## 🧠 Architecture Diagram
 
 👉 View full system architecture:  
-https://app.eraser.io/workspace/nnj9iCBB6gFF0MBKNo1w  
+https://app.eraser.io/workspace/nni9iCBB6gFF0MBKNo1w?origin=share
 
 ---
 
