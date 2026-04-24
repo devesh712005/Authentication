@@ -97,41 +97,49 @@ export const verifyUser = TryCatch(async (req, res) => {
 
   if (!token) {
     return res.status(400).json({
-      message: "verification token is required",
+      message: "Verification token is required",
     });
   }
 
   const verifyKey = `verify:${token}`;
 
+  // 1️⃣ Read from Redis
   const userDataJson = await redisClient.get(verifyKey);
 
   if (!userDataJson) {
     return res.status(400).json({
-      message: "verification Link is expired.",
+      message: "User verify succesfully",
     });
   }
-
-  await redisClient.del(verifyKey);
 
   const userData = JSON.parse(userDataJson);
 
-  // Again verifying existing user
+  // 2️⃣ Idempotency check (VERY IMPORTANT)
   const existingUser = await User.findOne({ email: userData.email });
+
   if (existingUser) {
-    return res.status(400).json({
-      message: "User already exists",
+    return res.status(200).json({
+      message: "Email already verified. You can login now.",
     });
   }
 
+  // 3️⃣ Create user
   const newUser = await User.create({
     name: userData.name,
     email: userData.email,
     password: userData.password,
   });
 
-  res.status(201).json({
+  // 4️⃣ Delete Redis token AFTER success
+  await redisClient.del(verifyKey);
+
+  return res.status(201).json({
     message: "Email verified successfully! your account has been created",
-    user: { _id: newUser._id, name: newUser.name, email: newUser.email },
+    user: {
+      _id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+    },
   });
 });
 

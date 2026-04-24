@@ -29,10 +29,7 @@ function App() {
               path="/verifyotp"
               element={isAuth ? <Home /> : <VerifyOtp />}
             />
-            <Route
-              path="/token/:token"
-              element={isAuth ? <Home /> : <Verify />}
-            />
+            <Route path="/token/:token" element={<Verify />} />
             <Route
               path="/dashboard"
               element={isAuth ? <Dashboard /> : <Login />}

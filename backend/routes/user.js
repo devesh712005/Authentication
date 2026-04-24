@@ -16,7 +16,7 @@ import { verifyCSRFToken } from "../config/csrfMiddleware.js";
 const router = express.Router();
 
 router.post("/register", registerUser);
-router.post("/verify/:token", verifyUser);
+router.get("/verify/:token", verifyUser);
 router.post("/login", loginUser);
 router.post("/verify", verifyOtp);
 router.get("/me", isAuth, myProfile);
