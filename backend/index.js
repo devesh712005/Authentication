@@ -5,7 +5,7 @@ import { createClient } from "redis";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 const app = express();
-
+app.set("trust proxy", 1);
 dotenv.config();
 
 // middleware
