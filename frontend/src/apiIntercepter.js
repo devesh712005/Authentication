@@ -16,21 +16,15 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    if (
-      config.method === "post" ||
-      config.method === "put" ||
-      config.method === "delete"
-    ) {
-      const csrfToken = getCookie("csrfToken");
-      if (csrfToken) {
-        config.headers["x-csrf-token"] = csrfToken;
-      }
+    const csrfToken = getCookie("csrfToken");
+
+    if (csrfToken) {
+      config.headers["x-csrf-token"] = csrfToken;
     }
+
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 let isRefreshing = false;
 let isRefreshingCSRFToken = false;

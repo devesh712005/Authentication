@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { server } from "../main";
 import api from "../apiIntercepter";
 const Dashboard = () => {
   const [content, setContent] = useState("");

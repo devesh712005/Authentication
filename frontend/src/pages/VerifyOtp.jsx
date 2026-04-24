@@ -26,9 +26,11 @@ function VerifyOtp() {
         },
       );
       toast.success(data.message);
+
       setIsAuth(true);
       setUser(data.user);
-      localStorage.clear("email");
+      localStorage.removeItem("email");
+
       navigate("/");
     } catch (error) {
       toast.error(error.response.data.message);
